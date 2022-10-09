@@ -39,7 +39,6 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string,
     input: process.stdin,
     output: process.stdout,
   });
-  let pin: string = "";
   rl.question("PIN number: ", async (answer) => {
     const authClient = new TwitterApi({
       appKey: consumerKey,
@@ -48,8 +47,8 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string,
       accessSecret: authLink.oauth_token_secret,
     });
 
-    pin = answer.trim();
-    const result = await authClient.login(pin)
+    const pin = answer.trim();
+    const result = await authClient.login(pin);
 
     console.log();
     console.log(`*** Got access tokens of user '@${result.screenName}'`);

@@ -6,7 +6,7 @@ Twiper
 
 
 License
-=======
+-------
  **Twiper** is being published under [**GNU AGPL v3**](LICENSE.md), with caveats from the author:
    - **DO NOT USE/STEAL/REFERENCE/(WHATEVER DOING SOME RELATED)** THIS PROJECT in COMMERCIAL TWEET CLEANER SERVICES!!!!!!  
      No, not a money related thing, just I hate kind of 'em
