@@ -4,12 +4,18 @@ import * as fs from "node:fs/promises";
 import open from "open";
 import path from "node:path";
 
-async function saveUserTokensToFile(screenName: string, accessToken: string, accessSecret: string) {
-  console.log("Writing user tokens into the secret file...");
+export async function saveUserTokensToFile(screenName: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
+  const secretFilePath = path.resolve(__dirname, "..", "..", ".secret.json");
+  
+  try {
+    await fs.access(secretFilePath, fs.constants.F_OK);
 
-  const secretFilePath = path.resolve(__dirname, "..", ".secret.json");
+    if(!overwrite) {
+      return false;
+    }
+  } catch { }
+
   const fileHandle = await fs.open(secretFilePath, "w+", 0o600);
-
   await fileHandle.write(JSON.stringify({
     user: {
       screenName,
@@ -19,48 +25,58 @@ async function saveUserTokensToFile(screenName: string, accessToken: string, acc
   }));
   await fileHandle.sync();
   await fileHandle.close();
-  
-  console.log("User tokens written to file");
+
+  return true;
 }
 
-export async function getUserTokens(consumerKey: string, consumerSecret: string, saveTokensToFile: boolean = true) {
-  const client = new TwitterApi({
+export async function getUserTokens(consumerKey: string, consumerSecret: string): Promise<{
+  screenName: string,
+  accessToken: string,
+  accessSecret: string,
+} | null> {
+  const requestClient = new TwitterApi({
     appKey: consumerKey,
     appSecret: consumerSecret
   });
 
   console.log("Getting user authentication link...");
-  const authLink = await client.generateAuthLink();
+  const authLink = await requestClient.generateAuthLink();
 
   console.log(`Web browser with authentication URL will be open, if it's not, manually open a browser and navigate to: ${authLink.url}`);
   open(authLink.url);
   
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question("PIN number: ", async (answer) => {
-    const authClient = new TwitterApi({
-      appKey: consumerKey,
-      appSecret: consumerSecret,
-      accessToken: authLink.oauth_token,
-      accessSecret: authLink.oauth_token_secret,
+  return await new Promise<{
+    screenName: string,
+    accessToken: string,
+    accessSecret: string,
+  } | null>((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
     });
 
-    const pin = answer.trim();
-    const result = await authClient.login(pin);
+    rl.question("PIN number: ", async (answer) => {
+      const authClient = new TwitterApi({
+        appKey: consumerKey,
+        appSecret: consumerSecret,
+        accessToken: authLink.oauth_token,
+        accessSecret: authLink.oauth_token_secret,
+      });
 
-    console.log();
-    console.log(`*** Got access tokens of user '@${result.screenName}'`);
-    if(!saveTokensToFile) {
-      console.log(`* Access Token:  ${result.accessToken}`);
-      console.log(`* Access Secret: ${result.accessSecret}`);
-      console.log(`*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
-    }
-    console.log();
+      const pin = answer.trim();
+      const result = await authClient.login(pin);
 
-    if(saveTokensToFile) saveUserTokensToFile(result.screenName, result.accessToken, result.accessSecret);
+      if(result) {
+        resolve({
+          screenName: result.screenName,
+          accessToken: result.accessToken,
+          accessSecret: result.accessSecret,
+        });
+      } else {
+        resolve(null);
+      }
 
-    rl.close();
+      rl.close();
+    });
   });
 }

@@ -1,14 +1,14 @@
 import chalk from "chalk";
-import MainHelp from "./commands/main-help";
-import ICommand from "./commands/ICommand";
-import Auth from "./commands/auth";
+import { Command } from "@/lib/Command";
+import MainHelp from "@/commands/main-help";
+import Auth from "@/commands/auth";
 
-const COMMANDS: { [key: string]: ICommand } = {
+const COMMANDS: { [key: string]: Command } = {
   "_": new MainHelp(),
   "auth": new Auth(),
 };
 
-function main(): void {
+async function main() {
   if(process.argv) {
     const args = process.argv.slice(2);
 
@@ -22,7 +22,7 @@ function main(): void {
         if(commandArgs.length >= 1 && commandArgs.includes("--help")) {
           console.log(COMMANDS[command].helpMessage);
         } else {
-          if(!COMMANDS[command].doCommand(commandArgs)) {
+          if(!(await COMMANDS[command].doCommand(commandArgs))) {
             console.log(COMMANDS[command].helpMessage);
           }
         }

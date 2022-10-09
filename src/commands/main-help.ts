@@ -1,7 +1,7 @@
 import CLU from "command-line-usage";
-import ICommand from "./ICommand";
+import { Command } from "@/lib/Command";
 
-export default class MainHelp implements ICommand {
+export default class MainHelp extends Command {
   get helpMessage(): string {
     return CLU([
       {
@@ -20,7 +20,9 @@ export default class MainHelp implements ICommand {
     ]);
   }
 
-  doCommand(args: string[]): boolean {
+  get availableParams() { return { }; }
+
+  async doCommand(args: string[]): Promise<boolean> {
     /* No action */
     return true;
   };
