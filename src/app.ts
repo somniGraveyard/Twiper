@@ -2,10 +2,12 @@ import chalk from "chalk";
 import { Command } from "@/lib/Command";
 import MainHelp from "@/commands/main-help";
 import Auth from "@/commands/auth";
+import Clean from "@/commands/clean";
 
 const COMMANDS: { [key: string]: Command } = {
   "_": new MainHelp(),
   "auth": new Auth(),
+  "clean": new Clean(),
 };
 
 async function main() {

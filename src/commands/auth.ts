@@ -26,7 +26,7 @@ export default class Auth extends Command {
           {
             name: "overwrite",
             alias: "s",
-            description: "Force overwrite secret file. Valid when `--save` parameter is enabled.",
+            description: "Force overwrite the secrets file. This will be ignored when {underline --no-save} parameter is specified.",
             defaultOption: false,
             type: Boolean,
           },
