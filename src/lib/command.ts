@@ -42,7 +42,7 @@ export abstract class Command {
 
   /**
    * @param args Command parameters
-   * @return `false` if command cannot be executed because of bad parameters or some other reasons, `true` if not
+   * @return `false` if command cannot be executed because of bad parameters or some other reasons, `true` if can
    */
   abstract doCommand(args: string[]): Promise<boolean>;
 
