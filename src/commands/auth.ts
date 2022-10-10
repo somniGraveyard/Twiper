@@ -1,8 +1,8 @@
 import chalk from "chalk";
 import CLU from "command-line-usage";
 import Config from "@/../config.json";
-import { getUserTokens, saveUserTokensToFile } from "@/auth";
-import { Command, Param } from "@/lib/Command";
+import { getUserTokens, saveUserTokensToFile } from "@/lib/auth";
+import { Command, Param } from "@/lib/command";
 
 export default class Auth extends Command {
   get helpMessage(): string {

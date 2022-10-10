@@ -1,5 +1,5 @@
 import CLU from "command-line-usage";
-import { Command } from "@/lib/Command";
+import { Command } from "@/lib/command";
 
 export default class Clean extends Command {
   get helpMessage(): string {

@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { Command } from "@/lib/Command";
+import { Command } from "@/lib/command";
 import MainHelp from "@/commands/main-help";
 import Auth from "@/commands/auth";
 import Clean from "@/commands/clean";
