@@ -14,7 +14,7 @@ async function main() {
   if(process.argv) {
     const args = process.argv.slice(2);
 
-    if(args.length <= 0 || (args.length >= 1 && args[0] === "help")) {
+    if(args.length <= 0 || (args.length >= 1 && (args[0] === "help" || args[0].endsWith("-help")))) {
       console.log(COMMANDS["_"].helpMessage);
     } else {
       const command = args[0];
