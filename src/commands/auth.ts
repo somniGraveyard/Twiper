@@ -87,7 +87,7 @@ export default class Auth extends Command {
           console.log("User tokens written to file");
         }
       } else {
-        console.log(chalk`User access tokens not saved to the secrets file because {underline --no-save} parameter is specified`);
+        console.log(chalk`User access tokens not saved to the secrets file because {underline ${this.availableParams["no-save"].nameParam}} parameter is specified`);
       }
     } else {
       console.error(chalk`{red Error: Invalid data}`);
