@@ -1,6 +1,7 @@
-# App config
+# App config & user data
 /config.json
 /.secret.json
+tweets.js
 
 # Logs
 logs
