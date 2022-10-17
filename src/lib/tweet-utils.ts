@@ -1,4 +1,4 @@
-import { TweetEssential, TweetMediaType } from "./interfaces";
+import { TweetEssential } from "./interfaces";
 
 export function getTweetIdList(tweets: TweetEssential[]): string[] {
   return tweets.map((tweet) => tweet.id_str);
