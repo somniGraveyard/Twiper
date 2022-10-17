@@ -1,3 +1,5 @@
+export type TweetMediaType = "photo" | "video" | "animated_gif";
+
 export interface TweetEssential {
   id_str: string,
   retweeted: boolean,
@@ -10,7 +12,7 @@ export interface TweetEssential {
     urls: object[],
     symbols: object[],
     media: {
-      type: "photo" | "video" | "animated_gif"
+      type: TweetMediaType,
     }[],
     hashtags: {
       text: string,
