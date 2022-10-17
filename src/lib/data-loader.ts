@@ -11,7 +11,7 @@ export async function loadTweetsJs(path: string): Promise<TweetEssential[] | nul
   const rawText = await fs.readFile(path, { encoding: "utf8", flag: "r" });
   if(!rawText) return null;
 
-  const fixedText = rawText.trim().replaceAll(/^window\.YTD\.tweets\.part(\d+) = /g, "");
+  const fixedText = rawText.trim().replaceAll(/^window\.YTD\.tweets\.part\d+\s?=\s?/g, "");
   if(!fixedText.startsWith("[")) return null;
 
   return JSON.parse(fixedText) as TweetEssential[];
