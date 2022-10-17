@@ -3,6 +3,7 @@ import CLU from "command-line-usage";
 import Config from "@/../config.json";
 import { getUserTokens, saveUserTokensToFile } from "@/lib/auth";
 import { Command, Param } from "@/lib/command";
+import L from "@/lib/log";
 
 export default class Auth extends Command {
   get helpMessage(): string {
@@ -58,7 +59,7 @@ export default class Auth extends Command {
   async doCommand(args: string[]): Promise<boolean> {
     for(const arg of args) {
       if(!this.availableParamsFlatten.includes(arg)) {
-        console.error(chalk`{red Unknown parameter: {bold ${arg}}}`);
+        L.e("Auth", chalk`Unknown parameter: {bold ${arg}}}`);
         return false;
       }
     }
@@ -69,28 +70,28 @@ export default class Auth extends Command {
 
     const data = await getUserTokens(Config.twitterApp.tokens.consumerKey, Config.twitterApp.tokens.consumerSecret);
     if(data) {
-      console.log();
-      console.log(`*** Got access tokens of user '@${data.screenName}'`);
+      L.nl();
+      L.i("Auth", `*** Got access tokens of user '@${data.screenName}'`);
       if(paramPrint) {
-        console.log(`* Access Token:  ${data.accessToken}`);
-        console.log(`* Access Secret: ${data.accessSecret}`);
-        console.log(`*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
+        L.i("Auth", `* Access Token:  ${data.accessToken}`);
+        L.i("Auth", `* Access Secret: ${data.accessSecret}`);
+        L.i("Auth", `*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
       }
-      console.log();
+      L.nl();
 
       if(!paramNoSave) {
-        console.log("Writing user tokens into the secret file...");
+        L.i("Auth", "Writing user tokens into the secret file...");
 
         if(!(await saveUserTokensToFile(data.screenName, data.accessToken, data.accessSecret, paramOverwrite))) {
-          console.log(chalk`{redBright Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!}`);
+          L.w("Auth", "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
         } else {
-          console.log("User tokens written to file");
+          L.i("Auth", "User tokens written to file");
         }
       } else {
-        console.log(chalk`User access tokens not saved to the secrets file because {underline ${this.availableParams["no-save"].nameParam}} parameter is specified`);
+        L.i("Auth", chalk`User access tokens not saved to the secrets file because {underline ${this.availableParams["no-save"].nameParam}} parameter is specified`);
       }
     } else {
-      console.error(chalk`{red Error: Invalid data}`);
+      L.e("Auth", "Invalid data");
     }
 
     return true;

@@ -3,6 +3,7 @@ import * as readline from "node:readline";
 import * as fs from "node:fs/promises";
 import open from "open";
 import path from "node:path";
+import L from "./log";
 
 export async function saveUserTokensToFile(screenName: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
   const secretFilePath = path.resolve(__dirname, "..", "..", ".secret.json");
@@ -39,10 +40,10 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string)
     appSecret: consumerSecret
   });
 
-  console.log("Getting user authentication link...");
+  L.i("AuthLib", "Getting user authentication link...");
   const authLink = await requestClient.generateAuthLink();
 
-  console.log(`Web browser with authentication URL will be open, if it's not, manually open a browser and navigate to: ${authLink.url}`);
+  L.i("AuthLib", `Web browser with authentication URL will be open, if it's not, manually open a browser and navigate to: ${authLink.url}`);
   open(authLink.url);
   
   return await new Promise<{
