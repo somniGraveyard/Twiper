@@ -59,7 +59,7 @@ export default class Auth extends Command {
   async doCommand(args: string[]): Promise<boolean> {
     for(const arg of args) {
       if(!this.availableParamsFlatten.includes(arg)) {
-        L.e("Auth", chalk`Unknown parameter: {bold ${arg}}}`);
+        L.e("Auth", chalk`Unknown parameter: {bold ${arg}}`);
         return false;
       }
     }
