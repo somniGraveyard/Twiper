@@ -2,21 +2,19 @@ import { TwitterApi } from "twitter-api-v2";
 import * as readline from "node:readline";
 import * as fs from "node:fs/promises";
 import open from "open";
-import path from "node:path";
 import L from "./log";
+import { SECRETS_FILE_PATH } from "@/common";
 
 export async function saveUserTokensToFile(screenName: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
-  const secretFilePath = path.resolve(__dirname, "..", "..", ".secret.json");
-  
+  let fileHandle!: fs.FileHandle;
   try {
-    await fs.access(secretFilePath, fs.constants.F_OK);
+    fileHandle = await fs.open(SECRETS_FILE_PATH, "w+", 0o600);
 
     if(!overwrite) {
       return false;
     }
   } catch { }
 
-  const fileHandle = await fs.open(secretFilePath, "w+", 0o600);
   await fileHandle.write(JSON.stringify({
     user: {
       screenName,
