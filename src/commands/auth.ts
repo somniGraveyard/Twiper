@@ -73,6 +73,7 @@ export default class Auth extends Command {
       L.nl();
       L.i("Auth", `*** Got access tokens of user '@${data.screenName}'`);
       if(paramPrint) {
+        L.i("Auth", `* User ID:  ${data.userId}`);
         L.i("Auth", `* Access Token:  ${data.accessToken}`);
         L.i("Auth", `* Access Secret: ${data.accessSecret}`);
         L.i("Auth", `*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
@@ -82,7 +83,7 @@ export default class Auth extends Command {
       if(!paramNoSave) {
         L.i("Auth", "Writing user tokens into the secret file...");
 
-        if(!(await saveUserTokensToFile(data.screenName, data.accessToken, data.accessSecret, paramOverwrite))) {
+        if(!(await saveUserTokensToFile(data.screenName, data.userId, data.accessToken, data.accessSecret, paramOverwrite))) {
           L.w("Auth", "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
         } else {
           L.i("Auth", "User tokens written to file");

@@ -5,7 +5,7 @@ import open from "open";
 import L from "./log";
 import { SECRETS_FILE_PATH } from "@/common";
 
-export async function saveUserTokensToFile(screenName: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
+export async function saveUserTokensToFile(screenName: string, userId: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
   let fileHandle!: fs.FileHandle;
   try {
     fileHandle = await fs.open(SECRETS_FILE_PATH, "w+", 0o600);
@@ -18,6 +18,7 @@ export async function saveUserTokensToFile(screenName: string, accessToken: stri
   await fileHandle.write(JSON.stringify({
     user: {
       screenName,
+      userId: Buffer.from(userId).toString("base64"),
       accessToken: Buffer.from(accessToken).toString("base64"),
       accessSecret: Buffer.from(accessSecret).toString("base64"),
     },
@@ -29,6 +30,7 @@ export async function saveUserTokensToFile(screenName: string, accessToken: stri
 }
 
 export async function getUserTokens(consumerKey: string, consumerSecret: string): Promise<{
+  userId: string,
   screenName: string,
   accessToken: string,
   accessSecret: string,
@@ -45,6 +47,7 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string)
   open(authLink.url);
   
   return await new Promise<{
+    userId: string,
     screenName: string,
     accessToken: string,
     accessSecret: string,
@@ -67,6 +70,7 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string)
 
       if(result) {
         resolve({
+          userId: result.userId,
           screenName: result.screenName,
           accessToken: result.accessToken,
           accessSecret: result.accessSecret,
