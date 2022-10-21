@@ -1,10 +1,21 @@
+import CLU from "command-line-usage";
+
 export class Param {
   private _name = "";
-  private _alias: string | null = null;
+  private _alias: string | undefined = undefined;
+  private _helpDescription = "";
+  private _helpType = Boolean;
 
-  constructor(name: string, alias?: string) {
-    this._name = name.toLowerCase();
-    if(alias) this._alias = alias;
+  constructor(options: {
+    name: string,
+    alias?: string,
+    help: { description: string, type: any }
+  }) {
+    this._name = options.name.toLowerCase();
+    if(options.alias) this._alias = options.alias;
+
+    this._helpDescription = options.help.description;
+    this._helpType = options.help.type;
   }
 
   get name(): string {
@@ -21,6 +32,15 @@ export class Param {
     } else {
       return null;
     }
+  }
+
+  get helpDefinition(): CLU.OptionDefinition {
+    return {
+      name: this._name,
+      alias: this._alias,
+      description: this._helpDescription,
+      type: this._helpType,
+    };
   }
 
   hasParam(argList: string[]): boolean {
@@ -55,5 +75,10 @@ export abstract class Command {
           return [value.nameParam];
         }
       }).flat();
+  }
+
+  get availableParamsHelpDefinitions(): CLU.OptionDefinition[] {
+    return Object.values(this.availableParams)
+      .map((value) => value.helpDefinition);
   }
 }

@@ -20,11 +20,7 @@ export default class Clean extends Command {
       {
         header: "Parameters",
         optionList: [
-          {
-            name: "wet",
-            description: "Perform real cleaning job.",
-            type: Boolean,
-          },
+          ...this.availableParamsHelpDefinitions,
           {
             name: "help",
             description: "Print this help message.",
@@ -37,7 +33,13 @@ export default class Clean extends Command {
 
   get availableParams() {
     return {
-      "wet": new Param("wet"),
+      "wet": new Param({
+        name: "wet",
+        help: {
+          description: "Perform real cleaning job.",
+          type: Boolean,
+        },
+      }),
     };
   }
 

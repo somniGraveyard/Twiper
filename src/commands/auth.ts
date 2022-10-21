@@ -18,26 +18,7 @@ export default class Auth extends Command {
       {
         header: "Parameters",
         optionList: [
-          {
-            name: "no-save",
-            description: "Don't save obtained user access tokens to the secrets file.",
-            defaultOption: true,
-            type: Boolean,
-          },
-          {
-            name: "overwrite",
-            alias: "s",
-            description: "Force overwrite the secrets file. This will be ignored when {underline --no-save} parameter is specified.",
-            defaultOption: false,
-            type: Boolean,
-          },
-          {
-            name: "print",
-            alias: "p",
-            description: "Print obtained user access tokens to stdout. Use with caution.",
-            defaultOption: false,
-            type: Boolean,
-          },
+          ...this.availableParamsHelpDefinitions,
           {
             name: "help",
             description: "Print this help message.",
@@ -50,9 +31,31 @@ export default class Auth extends Command {
 
   get availableParams() {
     return {
-      "no-save": new Param("no-save"),
-      "overwrite": new Param("overwrite", "s"),
-      "print": new Param("print", "p"),
+      "no-save": new Param({
+        name: "no-save",
+        help: {
+          description: "Don't save obtained user access tokens to the secrets file.",
+          type: Boolean,
+        },
+      }),
+
+      "overwrite": new Param({
+        name: "overwrite",
+        alias: "s",
+        help: {
+          description: "Force overwrite the secrets file. This will be ignored when {underline --no-save} parameter is specified.",
+          type: Boolean,
+        },
+      }),
+
+      "print": new Param({
+        name: "print",
+        alias: "p",
+        help: {
+          description: "Print obtained user access tokens to stdout. Use with caution.",
+          type: Boolean,
+        },
+      }),
     };
   }
 
