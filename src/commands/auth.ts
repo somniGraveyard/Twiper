@@ -17,14 +17,7 @@ export default class Auth extends Command {
       },
       {
         header: "Parameters",
-        optionList: [
-          ...this.availableParamsHelpDefinitions,
-          {
-            name: "help",
-            description: "Print this help message.",
-            type: Boolean,
-          },
-        ],
+        optionList: this.availableParamsHelpDefinitions,
       },
     ]);
   }

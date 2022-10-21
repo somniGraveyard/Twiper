@@ -67,18 +67,23 @@ export abstract class Command {
   abstract doCommand(args: string[]): Promise<boolean>;
 
   get availableParamsFlatten(): string[] {
-    return Object.values(this.availableParams)
-      .map((value) => {
-        if(value.aliasParam) {
-          return [value.nameParam, value.aliasParam];
-        } else {
-          return [value.nameParam];
-        }
-      }).flat();
+    return Object.values(this.availableParams).map((value) => {
+      if(value.aliasParam) {
+        return [value.nameParam, value.aliasParam];
+      } else {
+        return [value.nameParam];
+      }
+    }).flat();
   }
 
   get availableParamsHelpDefinitions(): CLU.OptionDefinition[] {
-    return Object.values(this.availableParams)
-      .map((value) => value.helpDefinition);
+    return [
+      ...Object.values(this.availableParams).map((value) => value.helpDefinition),
+      {
+        name: "help",
+        description: "Print this help message.",
+        type: Boolean,
+      },
+    ];
   }
 }
