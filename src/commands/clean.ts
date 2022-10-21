@@ -1,5 +1,9 @@
 import CLU from "command-line-usage";
 import { Command, Param } from "@/lib/command";
+import { loadTweetsJs } from "@/lib/data-loader";
+import L from "@/lib/log";
+import chalk from "chalk";
+import { sleep, TWEETSJS_FILE_PATH } from "@/common";
 
 export default class Clean extends Command {
   get helpMessage(): string {
@@ -38,7 +42,29 @@ export default class Clean extends Command {
   }
 
   async doCommand(args: string[]): Promise<boolean> {
-    // TODO
+    for(const arg of args) {
+      if(!this.availableParamsFlatten.includes(arg)) {
+        L.e("Clean", chalk`Unknown parameter: {bold ${arg}}`);
+        return false;
+      }
+    }
+
+    if(this.availableParamsFlatten.includes(this.availableParams.wet.nameParam)) {
+      L.w("Clean", chalk`{bold.underline Wet mode enabled}. THIS IS DESTRUCTIVE, YOU KNOW WHAT YOU'RE DOING.`);
+      L.w("Clean", chalk`You have {bold 5 seconds} to cancel. Use "Ctrl+C" or just kill the process if you want to cancel.`);
+      await sleep(5000);
+      L.nl();
+    }
+
+    L.i("Clean", "Loading Tweet list from file...");
+    const tweets = await loadTweetsJs(TWEETSJS_FILE_PATH);
+    if(tweets) {
+      L.i("Clean", chalk`Tweet list loaded. Total {bold ${tweets.length}} tweet(s).`);
+    } else {
+      L.e("Clean", `File "${TWEETSJS_FILE_PATH}" is not exist, or not available to use!`);
+      return true;
+    }
+
     return true;
   }
 }
