@@ -40,21 +40,21 @@ export default class Clean extends Command {
     if(!this.commandEntry(args)) return false;
 
     if(this.availableParams.wet.hasParam(args)) {
-      L.w("Clean", chalk`{bold.underline Wet mode enabled}. THIS IS DESTRUCTIVE, YOU KNOW WHAT YOU'RE DOING.`);
-      L.w("Clean", chalk`You have {bold 5 seconds} to cancel. Use "Ctrl+C" or just kill the process if you want to cancel.`);
+      L.w(this.name, chalk`{bold.underline Wet mode enabled}. THIS IS DESTRUCTIVE, YOU KNOW WHAT YOU'RE DOING.`);
+      L.w(this.name, chalk`You have {bold 5 seconds} to cancel. Use "Ctrl+C" or just kill the process if you want to cancel.`);
       await sleep(5000);
       L.nl();
     } else {
-      L.i("Clean", "Dry mode enabled. No real cleaning job will be happened.");
+      L.i(this.name, "Dry mode enabled. No real cleaning job will be happened.");
       L.nl();
     }
 
-    L.i("Clean", "Loading Tweet list from file...");
+    L.i(this.name, "Loading Tweet list from file...");
     const tweets = await loadTweetsJs(TWEETSJS_FILE_PATH);
     if(tweets) {
-      L.i("Clean", chalk`Tweet list loaded. Total {bold ${tweets.length}} tweet(s).`);
+      L.i(this.name, chalk`Tweet list loaded. Total {bold ${tweets.length}} tweet(s).`);
     } else {
-      L.e("Clean", `File "${TWEETSJS_FILE_PATH}" is not exist, or not available to use!`);
+      L.e(this.name, `File "${TWEETSJS_FILE_PATH}" is not exist, or not available to use!`);
       return true;
     }
 
