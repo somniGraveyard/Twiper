@@ -1,3 +1,12 @@
+export interface Config {
+  twitterApp: {
+    tokens: {
+      consumerKey: string,
+      consumerSecret: string,
+    },
+  },
+}
+
 export type TweetMediaType = "photo" | "video" | "animated_gif";
 
 export interface TweetEssential {
