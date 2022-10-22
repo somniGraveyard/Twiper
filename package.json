@@ -7,7 +7,8 @@
   "license": "AGPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register src/app.ts"
+    "start": "ts-node -r tsconfig-paths/register src/app.ts",
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -19,6 +20,7 @@
     "@types/command-line-usage": "^5.0.2",
     "@types/node": "^18.8.2",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
   }
