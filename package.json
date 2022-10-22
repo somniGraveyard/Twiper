@@ -8,7 +8,24 @@
   "private": true,
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
-    "build": "tsc && tsc-alias"
+    "compile-ts": "tsc && tsc-alias",
+    "pkg": "pkg -C Brotli ."
+  },
+  "bin": {
+    "pkg": "dist/compile/app.js"
+  },
+  "pkg": {
+    "scripts": "dist/compile/**/*.js",
+    "outputPath": "dist/pkg",
+    "targets": [
+      "node16-win-x64",
+      "node16-win-arm64",
+      "node16-linux-x64",
+      "node16-linux-arm64",
+      "node16-macos-x64",
+      "node16-macos-arm64"
+    ],
+    "compress": "Brotli"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -19,6 +36,7 @@
   "devDependencies": {
     "@types/command-line-usage": "^5.0.2",
     "@types/node": "^18.8.2",
+    "pkg": "^5.8.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.1.0",
