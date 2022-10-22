@@ -49,6 +49,9 @@ export default class Clean extends Command {
       L.w("Clean", chalk`You have {bold 5 seconds} to cancel. Use "Ctrl+C" or just kill the process if you want to cancel.`);
       await sleep(5000);
       L.nl();
+    } else {
+      L.i("Clean", "Dry mode enabled. No real cleaning job will be happened.");
+      L.nl();
     }
 
     L.i("Clean", "Loading Tweet list from file...");
