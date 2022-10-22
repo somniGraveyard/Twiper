@@ -37,12 +37,7 @@ export default class Clean extends Command {
   }
 
   async doCommand(args: string[]): Promise<boolean> {
-    for(const arg of args) {
-      if(!this.availableParamsFlatten.includes(arg)) {
-        L.e("Clean", chalk`Unknown parameter: {bold ${arg}}`);
-        return false;
-      }
-    }
+    if(!this.commandEntry(args)) return false;
 
     if(this.availableParams.wet.hasParam(args)) {
       L.w("Clean", chalk`{bold.underline Wet mode enabled}. THIS IS DESTRUCTIVE, YOU KNOW WHAT YOU'RE DOING.`);

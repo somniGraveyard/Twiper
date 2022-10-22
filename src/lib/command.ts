@@ -1,4 +1,6 @@
+import chalk from "chalk";
 import CLU from "command-line-usage";
+import L from "./log";
 
 export class Param {
   private _name = "";
@@ -54,6 +56,7 @@ export class Param {
 }
 
 export abstract class Command {
+  /* === Abstracts === */
   abstract get helpMessage(): string;
 
   abstract get availableParams(): {
@@ -62,9 +65,17 @@ export abstract class Command {
 
   /**
    * @param args Command parameters
-   * @return `false` if command cannot be executed because of bad parameters or some other reasons, `true` if can
+   * @return `false` if command cannot be executed because of bad parameters or some other reasons, `true` if can. On `false` situation the main procedure will show help message(using `get helpMessage()`) about the command.
    */
   abstract doCommand(args: string[]): Promise<boolean>;
+
+  /* === Predefined getters === */
+  /**
+   * Shorthand for `this.constructor.name`. Class name is command name.
+   */
+  get name(): string {
+    return this.constructor.name;
+  }
 
   get availableParamsFlatten(): string[] {
     return Object.values(this.availableParams).map((value) => {
@@ -85,5 +96,18 @@ export abstract class Command {
         type: Boolean,
       },
     ];
+  }
+
+  /* === Predefined functions === */
+  commandEntry(args: string[]): boolean {
+    // Show error message and exit if unknown parameter exists
+    for(const arg of args) {
+      if(!this.availableParamsFlatten.includes(arg)) {
+        L.e(this.name, chalk`Unknown parameter: {bold ${arg}}`);
+        return false;
+      }
+    }
+
+    return true;
   }
 }

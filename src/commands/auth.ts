@@ -53,12 +53,7 @@ export default class Auth extends Command {
   }
 
   async doCommand(args: string[]): Promise<boolean> {
-    for(const arg of args) {
-      if(!this.availableParamsFlatten.includes(arg)) {
-        L.e("Auth", chalk`Unknown parameter: {bold ${arg}}`);
-        return false;
-      }
-    }
+    if(!this.commandEntry(args)) return false;
 
     const paramNoSave = this.availableParams["no-save"].hasParam(args);
     const paramOverwrite = this.availableParams["overwrite"].hasParam(args);
