@@ -60,6 +60,8 @@ export default class Clean extends Command {
       return true;
     }
 
+    // TODO
+
     return true;
   }
 }

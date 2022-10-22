@@ -45,7 +45,7 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string)
 
   L.i("AuthLib", `Web browser with authentication URL will be open, if it's not, manually open a browser and navigate to: ${authLink.url}`);
   open(authLink.url);
-  
+
   return await new Promise<{
     userId: string,
     screenName: string,

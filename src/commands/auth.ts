@@ -1,9 +1,9 @@
 import chalk from "chalk";
 import CLU from "command-line-usage";
-import Config from "@/../config.json";
 import { getUserTokens, saveUserTokensToFile } from "@/lib/auth";
 import { Command, Param } from "@/lib/command";
 import L from "@/lib/log";
+import { loadConfig } from "@/lib/data-loader";
 
 export default class Auth extends Command {
   get helpMessage(): string {
@@ -64,31 +64,38 @@ export default class Auth extends Command {
     const paramOverwrite = this.availableParams["overwrite"].hasParam(args);
     const paramPrint = this.availableParams["print"].hasParam(args);
 
-    const data = await getUserTokens(Config.twitterApp.tokens.consumerKey, Config.twitterApp.tokens.consumerSecret);
-    if(data) {
-      L.nl();
-      L.i("Auth", `*** Got access tokens of user '@${data.screenName}'`);
-      if(paramPrint) {
-        L.i("Auth", `* User ID:  ${data.userId}`);
-        L.i("Auth", `* Access Token:  ${data.accessToken}`);
-        L.i("Auth", `* Access Secret: ${data.accessSecret}`);
-        L.i("Auth", `*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
-      }
-      L.nl();
+    L.i("Auth", "Loading config file...");
+    const config = await loadConfig();
 
-      if(!paramNoSave) {
-        L.i("Auth", "Writing user tokens into the secret file...");
+    if(!config) {
+      L.e("Auth", "Can't read config file!");
+    } else {
+      const data = await getUserTokens(config.twitterApp.tokens.consumerKey, config.twitterApp.tokens.consumerSecret);
+      if(data) {
+        L.nl();
+        L.i("Auth", `*** Got access tokens of user '@${data.screenName}'`);
+        if(paramPrint) {
+          L.i("Auth", `* User ID:  ${data.userId}`);
+          L.i("Auth", `* Access Token:  ${data.accessToken}`);
+          L.i("Auth", `* Access Secret: ${data.accessSecret}`);
+          L.i("Auth", `*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
+        }
+        L.nl();
 
-        if(!(await saveUserTokensToFile(data.screenName, data.userId, data.accessToken, data.accessSecret, paramOverwrite))) {
-          L.w("Auth", "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
+        if(!paramNoSave) {
+          L.i("Auth", "Writing user tokens into the secret file...");
+
+          if(!(await saveUserTokensToFile(data.screenName, data.userId, data.accessToken, data.accessSecret, paramOverwrite))) {
+            L.w("Auth", "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
+          } else {
+            L.i("Auth", "User tokens written to file");
+          }
         } else {
-          L.i("Auth", "User tokens written to file");
+          L.i("Auth", chalk`User access tokens not saved to the secrets file because {underline ${this.availableParams["no-save"].nameParam}} parameter is specified`);
         }
       } else {
-        L.i("Auth", chalk`User access tokens not saved to the secrets file because {underline ${this.availableParams["no-save"].nameParam}} parameter is specified`);
+        L.e("Auth", "Invalid data");
       }
-    } else {
-      L.e("Auth", "Invalid data");
     }
 
     return true;
