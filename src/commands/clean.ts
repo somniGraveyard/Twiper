@@ -44,7 +44,7 @@ export default class Clean extends Command {
       }
     }
 
-    if(this.availableParamsFlatten.includes(this.availableParams.wet.nameParam)) {
+    if(this.availableParams.wet.hasParam(args)) {
       L.w("Clean", chalk`{bold.underline Wet mode enabled}. THIS IS DESTRUCTIVE, YOU KNOW WHAT YOU'RE DOING.`);
       L.w("Clean", chalk`You have {bold 5 seconds} to cancel. Use "Ctrl+C" or just kill the process if you want to cancel.`);
       await sleep(5000);
