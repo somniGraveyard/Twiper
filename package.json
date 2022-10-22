@@ -9,7 +9,13 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "compile-ts": "tsc && tsc-alias",
-    "pkg": "pkg -C Brotli ."
+    "pkg": "pkg -C Brotli .",
+    "dist": "rimraf dist && yarn compile-ts && yarn pkg"
+  },
+  "engines": {
+    "node": ">= 16",
+    "npm": "use-yarn",
+    "yarn": ">= 1.22.0"
   },
   "bin": {
     "pkg": "dist/compile/app.js"
@@ -37,6 +43,7 @@
     "@types/command-line-usage": "^5.0.2",
     "@types/node": "^18.8.2",
     "pkg": "^5.8.0",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.1.0",
