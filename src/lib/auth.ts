@@ -8,7 +8,7 @@ import { SECRETS_FILE_PATH } from "@/common";
 export async function saveUserTokensToFile(screenName: string, userId: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
   let fileHandle!: fs.FileHandle;
   try {
-    fileHandle = await fs.open(SECRETS_FILE_PATH, overwrite ? "w+" : "wx+", 0o600);
+    fileHandle = await fs.open(SECRETS_FILE_PATH, overwrite ? "w" : "wx", 0o600);
   } catch(err: any) {
     if(err.code === "EEXIST") {
       L.w("AuthLib", "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
