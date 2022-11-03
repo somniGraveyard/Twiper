@@ -1,6 +1,6 @@
 import CLU from "command-line-usage";
 import chalk from "chalk";
-import { TwitterApi } from "twitter-api-v2";
+import { ApiResponseError, TwitterApi } from "twitter-api-v2";
 import { Command, Param } from "@/lib/command";
 import { loadTweetsJs } from "@/lib/data-loader";
 import L from "@/lib/log";
@@ -79,35 +79,84 @@ export default class Clean extends Command {
     }
 
     /* Sleep a second(3 seconds on wet mode) to give the user last chance to cancel */
+    L.nl();
     await sleep(1000);
 
     /* Real cleaning job */
+    let deletedTweetCount = 0;
     for(let index = 0; index < tweets.length; index++) {
       const tweet = tweets[index];
-      L.i(this.name, chalk`{grey #${index + 1}} Deleting Tweet with ID: {bold ${tweet.id_str}}, Text: "{bold ${sliceText(tweet.full_text, 30)}}"`);
 
       if(wetModeEnabled) {
         if(client) {
-          // REAL TODO
+          try {
+            await client.v1.deleteTweet(tweet.id_str);
+          } catch(error) {
+            if(error instanceof ApiResponseError) {
+              if(error.rateLimitError && error.rateLimit) {
+                // Rate Limit Error
+                let limitReset = error.rateLimit.reset;
+                L.w(this.name, chalk`Hit the rate-limit! Tweet deleting API is limited to {underline ${error.rateLimit.limit} requests}.`);
+                L.w(this.name, chalk`Rate limit for Tweet deleting API will be reset in ${limitReset} seconds.`);
+                L.w(this.name, chalk`Cleaning job paused for rate-limit reset...`);
+
+                while(limitReset > 0) {
+                  await new Promise<void>(async (resolve) => {
+                    await sleep(1000);
+                    process.stdout.clearLine(0);
+                    process.stdout.cursorTo(0);
+                    process.stdout.write((limitReset--).toString());
+                    resolve();
+                  });
+                }
+
+                L.nl();
+                index--;
+              } else if(error.code === 404) {
+                L.w(this.name, chalk`{grey #${index + 1}} Tweet seems like deleted or not found. Skipping.  (Tweet ID: ${tweet.id_str})`);
+              } else if(error.code === 403) {
+                L.e(this.name, chalk`{grey #${index + 1}} Forbidden API access(HTTP 403)! Maybe you logged in with wrong account?  (Tweet ID: ${tweet.id_str})`);
+                L.raw(error.errors);
+              } else {
+                L.e(this.name, chalk`{grey #${index + 1}} Unknown API error!   (Tweet ID: ${tweet.id_str})`);
+                L.raw(error);
+              }
+            } else {
+              L.e(this.name, chalk`{grey #${index + 1}} Unknown error!  (Tweet ID: ${tweet.id_str})`);
+              L.raw(error);
+            }
+            
+            continue;
+          }
         }
       } else {
         // Faking communication delay, using sleep() with random duration(0.02s ~ 0.12s per Tweet)
         await sleep(Math.floor(Math.random() * 100 + 20));
       }
+
+      L.i(this.name, chalk`{grey #${index + 1}} Deleted Tweet with ID: {bold ${tweet.id_str}}, Text: "{bold ${sliceText(tweet.full_text, 30)}}"`);
+      deletedTweetCount++;
     }
 
     /* Leave `Clean With` Tweet */
     L.nl();
     L.i(this.name, "Leaving `Clean With` Tweet on logged in account...");
     L.i(this.name, "You are free to delete the Tweet once after it posted. You can cheer the developer up just by this Tweet!");
-    if(wetModeEnabled && client) {
-      await client.v1.tweet(CLEANWITH_TWEET_TEXT);
+    try {
+      if(wetModeEnabled && client) {
+          await client.v1.tweet(CLEANWITH_TWEET_TEXT);
+      }
+      L.i(this.name, "`Clean With` Tweet posted!");
+    } catch(error) {
+      if(error instanceof ApiResponseError) {
+        L.e(this.name, "Error caused while posting Tweet!");
+        L.raw(error.errors);
+      }
     }
-    L.i(this.name, "`Clean With` Tweet posted!");
 
     /* Cleaning job done */
     L.nl();
-    L.i(this.name, "Tweet cleaning job done!");
+    L.i(this.name, chalk`Tweet cleaning job done! Deleted {bold ${deletedTweetCount}} Tweets out of ${tweets.length}`);
     if(!wetModeEnabled) {
       L.w(this.name, "This command ran under dry mode, so no data has been deleted or altered.");
     }
