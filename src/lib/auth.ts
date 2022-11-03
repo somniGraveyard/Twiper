@@ -11,8 +11,13 @@ export async function saveUserTokensToFile(screenName: string, userId: string, a
     fileHandle = await fs.open(SECRETS_FILE_PATH, overwrite ? "w+" : "wx+", 0o600);
   } catch(err: any) {
     if(err.code === "EEXIST") {
-      return false;
+      L.w("AuthLib", "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
+    } else {
+      L.e("AuthLib", "Unknown error occured while accessing secrets file!");
+      L.raw(err);
     }
+
+    return false;
   }
 
   await fileHandle.write(JSON.stringify({

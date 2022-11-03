@@ -80,9 +80,7 @@ export default class Auth extends Command {
         if(!paramNoSave) {
           L.i(this.name, "Writing user tokens into the secret file...");
 
-          if(!(await saveUserTokensToFile(data.screenName, data.userId, data.accessToken, data.accessSecret, paramOverwrite))) {
-            L.w(this.name, "Overwrite parameter not specified, and seems like the secret file is already exists. No changes will be made!");
-          } else {
+          if(await saveUserTokensToFile(data.screenName, data.userId, data.accessToken, data.accessSecret, paramOverwrite)) {
             L.i(this.name, "User tokens written to file");
           }
         } else {
