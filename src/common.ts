@@ -1,8 +1,8 @@
 import path from "path";
 
-const TWEETSJS_FILE_PATH = path.resolve(__dirname, "..", "tweets.js");
-const SECRETS_FILE_PATH = path.resolve(__dirname, "..", ".secret.json");
-const CONFIG_FILE_PATH = path.resolve(__dirname, "..", "config.json");
+const TWEETSJS_FILE_PATH = path.resolve(process.cwd(), "tweets.js");
+const SECRETS_FILE_PATH = path.resolve(process.cwd(), ".secret.json");
+const CONFIG_FILE_PATH = path.resolve(process.cwd(), "config.json");
 
 async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => {
