@@ -7,6 +7,15 @@ export interface Config {
   },
 }
 
+export interface Secrets {
+  user: {
+    screenName: string,
+    userId: string,
+    accessToken: string,
+    accessSecret: string,
+  },
+}
+
 export type TweetMediaType = "photo" | "video" | "animated_gif";
 
 export interface TweetEssential {
