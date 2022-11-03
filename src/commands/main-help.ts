@@ -1,5 +1,6 @@
 import CLU from "command-line-usage";
-import { Command } from "@/lib/command";
+import { Command, Param } from "@/lib/command";
+import L from "@/lib/log";
 
 export default class MainHelp extends Command {
   get helpMessage(): string {
@@ -7,6 +8,10 @@ export default class MainHelp extends Command {
       {
         header: "Twiper",
         content: "An On-Your-Own Tweet Cleaner!",
+      },
+      {
+        header: "Parameters (program itself)",
+        optionList: this.availableParamsHelpDefinitions,
       },
       {
         header: "Commands",
@@ -21,10 +26,26 @@ export default class MainHelp extends Command {
     ]);
   }
 
-  get availableParams() { return { }; }
+  get availableParams() {
+    return {
+      "version": new Param({
+        name: "version",
+        alias: "v",
+        help: {
+          type: Boolean,
+          description: "Show the version of the program.",
+        },
+      }),
+    };
+  }
 
   async doCommand(args: string[]): Promise<boolean> {
-    /* No action */
+    if(args.length === 0 || args.some((a) => a.endsWith("-help")) || !this.commandEntry(args)) return false;
+
+    if(this.availableParams.version.hasParam(args)) {
+      L.raw(`v${(await import("@/../package.json")).version}`);
+    }
+
     return true;
   };
 }

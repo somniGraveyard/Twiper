@@ -5,7 +5,7 @@ import Clean from "@/commands/clean";
 import L from "@/lib/log";
 
 const COMMANDS: { [key: string]: Command } = {
-  "_": new MainHelp(),
+  "help": new MainHelp(),
   "auth": new Auth(),
   "clean": new Clean(),
 };
@@ -14,8 +14,10 @@ async function main() {
   if(process.argv) {
     const args = process.argv.slice(2);
 
-    if(args.length <= 0 || (args.length >= 1 && (args[0] === "help" || args[0].endsWith("-help")))) {
-      L.raw(COMMANDS["_"].helpMessage);
+    if(args.length <= 0 || (args.length >= 1 && args.some((a) => a.startsWith("-")))) {
+      if(!(await COMMANDS["help"].doCommand(args))) {
+        L.raw(COMMANDS["help"].helpMessage);
+      }
     } else {
       const command = args[0];
       const commandArgs = args.slice(1);
@@ -30,7 +32,7 @@ async function main() {
         }
       } else {
         L.e("Main", "Not a valid command!!");
-        L.raw(COMMANDS["_"].helpMessage);
+        L.raw(COMMANDS["help"].helpMessage);
       }
     }
   }
