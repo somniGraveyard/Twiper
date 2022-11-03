@@ -8,12 +8,12 @@ import { SECRETS_FILE_PATH } from "@/common";
 export async function saveUserTokensToFile(screenName: string, userId: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
   let fileHandle!: fs.FileHandle;
   try {
-    fileHandle = await fs.open(SECRETS_FILE_PATH, "w+", 0o600);
-
-    if(!overwrite) {
+    fileHandle = await fs.open(SECRETS_FILE_PATH, overwrite ? "w+" : "wx+", 0o600);
+  } catch(err: any) {
+    if(err.code === "EEXIST") {
       return false;
     }
-  } catch { }
+  }
 
   await fileHandle.write(JSON.stringify({
     user: {
