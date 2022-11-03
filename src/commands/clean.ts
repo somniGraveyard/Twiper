@@ -4,6 +4,7 @@ import { loadTweetsJs } from "@/lib/data-loader";
 import L from "@/lib/log";
 import chalk from "chalk";
 import { sleep, TWEETSJS_FILE_PATH } from "@/common";
+import { sliceText } from "@/lib/tweet-utils";
 
 export default class Clean extends Command {
   get helpMessage(): string {
@@ -39,16 +40,17 @@ export default class Clean extends Command {
   async doCommand(args: string[]): Promise<boolean> {
     if(!this.commandEntry(args)) return false;
 
-    if(this.availableParams.wet.hasParam(args)) {
+    const wetModeEnabled = this.availableParams.wet.hasParam(args);
+
+    if(wetModeEnabled) {
       L.w(this.name, chalk`{bold.underline Wet mode enabled}. THIS IS DESTRUCTIVE, YOU KNOW WHAT YOU'RE DOING.`);
       L.w(this.name, chalk`You have {bold 5 seconds} to cancel. Use "Ctrl+C" or just kill the process if you want to cancel.`);
       await sleep(5000);
-      L.nl();
     } else {
       L.i(this.name, "Dry mode enabled. No real cleaning job will be happened.");
-      L.nl();
     }
 
+    L.nl();
     L.i(this.name, "Loading Tweet list from file...");
     const tweets = await loadTweetsJs(TWEETSJS_FILE_PATH);
     if(tweets) {
@@ -58,7 +60,25 @@ export default class Clean extends Command {
       return true;
     }
 
-    // TODO
+    await sleep(1000);
+
+    for(let index = 0; index < tweets.length; index++) {
+      const tweet = tweets[index];
+      L.i(this.name, chalk`{grey #${index + 1}} Deleting Tweet with ID: {bold ${tweet.id_str}}, Text: "{bold ${sliceText(tweet.full_text, 30)}}"`);
+
+      if(wetModeEnabled) {
+        // WET MODE TODO
+      } else {
+        // Faking communication delay, using sleep() with random duration(0.02s ~ 0.22s per Tweet)
+        await sleep(Math.floor(Math.random() * 200 + 20));
+      }
+    }
+
+    L.nl();
+    L.i(this.name, "Tweet cleaning job done!");
+    if(!wetModeEnabled) {
+      L.w(this.name, "This command ran under dry mode, so no data has been deleted or altered.");
+    }
 
     return true;
   }

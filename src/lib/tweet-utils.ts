@@ -51,3 +51,13 @@ export function filterTweets(tweets: TweetEssential[], options: {
     }
   });
 }
+
+export function sliceText(str: string, end: number): string {
+  const strNormalized = str.trim().replaceAll(/(\r\n|\r|\n)/g, " ");
+
+  if(strNormalized.length <= end) {
+    return strNormalized;
+  } else {
+    return `${strNormalized.slice(0, end)} ...`;
+  }
+}
