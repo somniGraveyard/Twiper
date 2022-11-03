@@ -18,7 +18,7 @@
     "yarn": ">= 1.22.0"
   },
   "bin": {
-    "pkg": "dist/compile/app.js"
+    "pkg": "dist/compile/src/app.js"
   },
   "pkg": {
     "scripts": "dist/compile/**/*.js",
