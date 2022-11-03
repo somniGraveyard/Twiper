@@ -1,0 +1,8 @@
+{
+  "twitterApp": {
+    "tokens": {
+      "consumerKey": "<KEY HERE>",
+      "consumerSecret": "<SECRET HERE>"
+    }
+  }
+}
