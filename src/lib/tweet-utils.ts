@@ -1,3 +1,5 @@
+import { TwitterApi } from "twitter-api-v2";
+import { loadConfig, loadSecrets } from "./data-loader";
 import { TweetEssential } from "./interfaces";
 
 export function getTweetIdList(tweets: TweetEssential[]): string[] {
@@ -60,4 +62,20 @@ export function sliceText(str: string, end: number): string {
   } else {
     return `${strNormalized.slice(0, end)} ...`;
   }
+}
+
+export async function buildTwitterClient(): Promise<TwitterApi | null> {
+  const config = await loadConfig();
+  const secrets = await loadSecrets();
+
+  if(!config || !secrets) return null;
+
+  const client = new TwitterApi({
+    appKey: config.twitterApp.tokens.consumerKey,
+    appSecret: config.twitterApp.tokens.consumerSecret,
+    accessToken: secrets.user.accessToken,
+    accessSecret: secrets.user.accessSecret,
+  });
+
+  return client ?? null;
 }

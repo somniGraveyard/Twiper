@@ -23,9 +23,9 @@ export async function saveUserTokensToFile(screenName: string, userId: string, a
   await fileHandle.write(JSON.stringify({
     user: {
       screenName,
-      userId: Buffer.from(userId).toString("base64"),
-      accessToken: Buffer.from(accessToken).toString("base64"),
-      accessSecret: Buffer.from(accessSecret).toString("base64"),
+      userId: Buffer.from(userId, "utf8").toString("base64"),
+      accessToken: Buffer.from(accessToken, "utf8").toString("base64"),
+      accessSecret: Buffer.from(accessSecret, "utf8").toString("base64"),
     },
   }));
   await fileHandle.sync();
