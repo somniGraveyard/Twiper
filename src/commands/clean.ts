@@ -61,7 +61,7 @@ export default class Clean extends Command {
     if(tweets) {
       L.i(this.name, chalk`Tweet list loaded. Total {bold ${tweets.length}} tweet(s).`);
     } else {
-      L.e(this.name, `File "${TWEETSJS_FILE_PATH}" is not exist, or not available to use!`);
+      L.e(this.name, `File "${TWEETSJS_FILE_PATH}" is not exist, or not available to use! Exiting.`);
       return true;
     }
 
@@ -73,6 +73,9 @@ export default class Clean extends Command {
 
       if(client) {
         L.i(this.name, chalk`Twitter API client loaded, logged in as {bold.underline @${(await client.currentUser()).screen_name}}`);
+      } else {
+        L.e(this.name, "Twitter API client not loaded or cannot be created! Exiting.");
+        return true;
       }
 
       await sleep(2000);
@@ -156,7 +159,7 @@ export default class Clean extends Command {
 
     /* Cleaning job done */
     L.nl();
-    L.i(this.name, chalk`Tweet cleaning job done! Deleted {bold ${deletedTweetCount}} Tweets out of ${tweets.length}`);
+    L.i(this.name, chalk`Tweet cleaning job done! Deleted {bold ${deletedTweetCount}} Tweets out of ${tweets.length}.`);
     if(!wetModeEnabled) {
       L.w(this.name, "This command ran under dry mode, so no data has been deleted or altered.");
     }

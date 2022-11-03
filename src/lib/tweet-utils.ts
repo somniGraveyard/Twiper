@@ -1,6 +1,7 @@
 import { TwitterApi } from "twitter-api-v2";
 import { loadConfig, loadSecrets } from "./data-loader";
 import { TweetEssential } from "./interfaces";
+import L from "./log";
 
 export function getTweetIdList(tweets: TweetEssential[]): string[] {
   return tweets.map((tweet) => tweet.id_str);
@@ -65,17 +66,26 @@ export function sliceText(str: string, end: number): string {
 }
 
 export async function buildTwitterClient(): Promise<TwitterApi | null> {
+  L.i("TweetUtil", "Loading config and secrets...");
   const config = await loadConfig();
   const secrets = await loadSecrets();
+  L.i("TweetUtil", "Config and secrets loaded.");
 
   if(!config || !secrets) return null;
 
-  const client = new TwitterApi({
-    appKey: config.twitterApp.tokens.consumerKey,
-    appSecret: config.twitterApp.tokens.consumerSecret,
-    accessToken: secrets.user.accessToken,
-    accessSecret: secrets.user.accessSecret,
-  });
+  try {
+    const client = new TwitterApi({
+      appKey: config.twitterApp.tokens.consumerKey,
+      appSecret: config.twitterApp.tokens.consumerSecret,
+      accessToken: secrets.user.accessToken,
+      accessSecret: secrets.user.accessSecret,
+    });
 
-  return client ?? null;
+    return client ?? null;
+  } catch(error) {
+    L.e("TweetUtil", "Error caused while initializing Twitter API client!");
+    L.raw(error);
+  }
+
+  return null;
 }
