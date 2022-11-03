@@ -163,6 +163,9 @@ export default class Clean extends Command {
     if(!wetModeEnabled) {
       L.w(this.name, "This command ran under dry mode, so no data has been deleted or altered.");
     }
+    if(deletedTweetCount < 0) {
+      L.w(this.name, "Looks like something went wrong, like you authenticated with different account, no Internet connection, or else. Please check and troubleshoot possible problems and run again!");
+    }
 
     return true;
   }
