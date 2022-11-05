@@ -14,11 +14,7 @@ async function main() {
   if(process.argv) {
     const args = process.argv.slice(2);
 
-    if(args.length <= 0 || (args.length >= 1 && args.some((a) => a.startsWith("-")))) {
-      if(!(await COMMANDS["help"].doCommand(args))) {
-        L.raw(COMMANDS["help"].helpMessage);
-      }
-    } else {
+    if(args.length >= 1 && !args[0].startsWith("-")) {
       const command = args[0];
       const commandArgs = args.slice(1);
 
@@ -32,6 +28,10 @@ async function main() {
         }
       } else {
         L.e("Main", "Not a valid command!!");
+        L.raw(COMMANDS["help"].helpMessage);
+      }
+    } else {
+      if(!(await COMMANDS["help"].doCommand(args))) {
         L.raw(COMMANDS["help"].helpMessage);
       }
     }
