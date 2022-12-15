@@ -18,6 +18,7 @@ export default class MainHelp extends Command {
         content: [
           { name: "{bold auth}", summary: "Make an authentication to Twitter and obtain user access tokens" },
           { name: "{bold clean}", summary: "Do Tweet cleaning" },
+          { name: "{bold test-filter}", summary: "Test filter syntax" },
         ],
       },
       {

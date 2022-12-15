@@ -1,13 +1,15 @@
 import { Command } from "@/lib/command";
+import L from "@/lib/log";
 import MainHelp from "@/commands/main-help";
 import Auth from "@/commands/auth";
 import Clean from "@/commands/clean";
-import L from "@/lib/log";
+import FilterTest from "@/commands/filter-test";
 
 const COMMANDS: { [key: string]: Command } = {
   "help": new MainHelp(),
   "auth": new Auth(),
   "clean": new Clean(),
+  "test-filter": new FilterTest(),
 };
 
 async function main() {
