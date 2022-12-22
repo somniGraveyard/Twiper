@@ -1,5 +1,8 @@
 Twiper
 ======
+[![Node.js CI](https://github.com/somnisomni/Twiper/actions/workflows/node.yml/badge.svg?branch=main)](https://github.com/somnisomni/Twiper/actions/workflows/node.yml)
+
+
  **Twiper** *(pronounce as T-wee-per)* is an on-your-own Tweet cleaner, without paying commercial services but in really manual way.
 
  This is a sequel project of [twitter-pwa-archive-cleaner](https://github.com/SDSkyKlouD/twitter-pwa-archive-cleaner).
