@@ -10,6 +10,7 @@ const COMMANDS: { [key: string]: Command } = {
   "auth": new Auth(),
   "clean": new Clean(),
   "test-filter": new FilterTest(),
+  "filter-test": new FilterTest(),
 };
 
 async function main() {
