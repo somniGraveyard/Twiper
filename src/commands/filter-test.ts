@@ -2,6 +2,7 @@ import chalk from "chalk";
 import CLU from "command-line-usage";
 import { Command, Param } from "@/lib/command";
 import L from "@/lib/log";
+import { parseFilterExp } from "@/lib/tweet-utils";
 
 export default class FilterTest extends Command {
   get helpMessage(): string {
@@ -41,6 +42,30 @@ export default class FilterTest extends Command {
     }
 
     const filterSyntax = this.availableParams.filter.getParamValue(args);
+    if(filterSyntax) {
+      const filterOption = parseFilterExp(filterSyntax);
+
+      if(filterOption) {
+        L.i(this.name, chalk`Filter syntax parsed, original string: {bold ${filterSyntax}}`);
+        L.nl();
+
+        if(filterOption.rt) {
+          L.i(this.name, chalk`🔄️ Will filter Tweets with {bold.underline ${filterOption.rt.lessThan ? "less" : "greater"} than ${filterOption.rt.count} RT(s)}.`);
+        }
+
+        if(filterOption.like) {
+          L.i(this.name, chalk`💟 Will filter Tweets with {bold.underline ${filterOption.like.lessThan ? "less" : "greater"} than ${filterOption.like.count} Like(s)}.`);
+        }
+
+        if(filterOption.media && filterOption.media.exist) {
+          L.i(this.name, chalk`🕶️ Will filter Tweets with {bold.underline any media(s)}.`);
+        }
+      } else {
+        L.e(this.name, "Cannot parse filter syntax! Make sure you provided valid filter syntax string.");
+      }
+    } else {
+      L.e(this.name, "Unknown error: invalid filter syntax string");
+    }
 
     return true;
   }
