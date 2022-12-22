@@ -146,7 +146,7 @@ export abstract class Command {
           if(!arg.startsWith("-")) {
             willHaveParamValue = false;
             continue;
-          } else if(arg.startsWith("-")) {
+          } else {
             L.e(this.name, chalk`Parameter needs string value`);
             return false;
           }

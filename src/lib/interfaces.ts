@@ -37,3 +37,17 @@ export interface TweetEssential {
     }[],
   }
 }
+
+export interface FilterOption {
+  rt?: {
+    count: number,
+    lessThan: boolean,
+  },
+  like?: {
+    count: number,
+    lessThan: boolean,
+  },
+  media?: {
+    exist: boolean | null,
+  },
+}
