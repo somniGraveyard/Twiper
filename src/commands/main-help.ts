@@ -23,7 +23,7 @@ export default class MainHelp extends Command {
       },
       {
         content: "You can view help message for each commands by adding {underline `--help`} parameter after the command. This parameter will ignore other parameters.",
-      }
+      },
     ]);
   }
 
@@ -48,5 +48,5 @@ export default class MainHelp extends Command {
     }
 
     return true;
-  };
+  }
 }

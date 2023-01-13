@@ -12,8 +12,8 @@ export default class Auth extends Command {
         header: "Authentication (`auth`)",
         content: [
           "Make an authentication to Twitter and obtain user access tokens, which requires for using Twitter API.",
-          "\nUser access tokens obtained by this command will save to the secrets file automatically by default. Saved secrets file will be used in further commands like {bold clean}."
-        ]
+          "\nUser access tokens obtained by this command will save to the secrets file automatically by default. Saved secrets file will be used in further commands like {bold clean}.",
+        ],
       },
       {
         header: "Parameters",
@@ -73,7 +73,7 @@ export default class Auth extends Command {
           L.i(this.name, `* User ID:  ${data.userId}`);
           L.i(this.name, `* Access Token:  ${data.accessToken}`);
           L.i(this.name, `* Access Secret: ${data.accessSecret}`);
-          L.i(this.name, `*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***`);
+          L.i(this.name, "*** DO NOT SHARE THIS SECRETS TO STRANGERS !!! ***");
         }
         L.nl();
 

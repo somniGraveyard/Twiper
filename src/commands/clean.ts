@@ -16,8 +16,8 @@ export default class Clean extends Command {
           "Clean Tweets using Tweet Archive.",
           "\nThis command needs user access token secrets for accessing Twitter API, which can be obtained/saved (to file) by command {bold auth}.",
           "\nThis command will always perform dry run unless {underline --wet} parameter is specified, to prevent the user clean their Tweets by mistake.",
-          "\n\n{red {bold CAUTION}: USE THIS COMMAND ON YOUR OWN RISK. DEVELOPER IS NOT RESPONSIBLE FOR ANY LOSS OR/AND DAMAGE OF YOUR DATA.}"
-        ]
+          "\n\n{red {bold CAUTION}: USE THIS COMMAND ON YOUR OWN RISK. DEVELOPER IS NOT RESPONSIBLE FOR ANY LOSS OR/AND DAMAGE OF YOUR DATA.}",
+        ],
       },
       {
         header: "Parameters",
@@ -90,6 +90,12 @@ export default class Clean extends Command {
     for(let index = 0; index < tweets.length; index++) {
       const tweet = tweets[index];
 
+      // // TEMP
+      // if(parseInt(tweet.retweet_count) > 5) {
+      //   L.i(this.name, `${tweet.id_str}: Retweet count > 5, skip, Text: "{bold ${sliceText(tweet.full_text, 30)}}"`);
+      //   continue;
+      // }
+
       if(wetModeEnabled) {
         if(client) {
           try {
@@ -104,8 +110,9 @@ export default class Clean extends Command {
                 L.w(this.name, chalk`Cleaning job paused for rate-limit reset...`);
 
                 while(limitReset > 0) {
-                  await new Promise<void>(async (resolve) => {
-                    await sleep(1000);
+                  await new Promise<void>((resolve) => {
+                    Promise.resolve(sleep(1000));
+
                     process.stdout.clearLine(0);
                     process.stdout.cursorTo(0);
                     process.stdout.write((limitReset--).toString());
@@ -147,7 +154,7 @@ export default class Clean extends Command {
     L.i(this.name, "You are free to delete the Tweet once after it posted. You can cheer the developer up just by this Tweet!");
     try {
       if(wetModeEnabled && client) {
-          await client.v1.tweet(CLEANWITH_TWEET_TEXT);
+        await client.v1.tweet(CLEANWITH_TWEET_TEXT);
       }
       L.i(this.name, "`Clean With` Tweet posted!");
     } catch(error) {

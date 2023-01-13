@@ -5,7 +5,7 @@ import open from "open";
 import L from "./log";
 import { SECRETS_FILE_PATH } from "@/common";
 
-export async function saveUserTokensToFile(screenName: string, userId: string, accessToken: string, accessSecret: string, overwrite: boolean = false): Promise<boolean> {
+export async function saveUserTokensToFile(screenName: string, userId: string, accessToken: string, accessSecret: string, overwrite = false): Promise<boolean> {
   let fileHandle!: fs.FileHandle;
   try {
     fileHandle = await fs.open(SECRETS_FILE_PATH, overwrite ? "w" : "wx", 0o600);
@@ -42,7 +42,7 @@ export async function getUserTokens(consumerKey: string, consumerSecret: string)
 } | null> {
   const requestClient = new TwitterApi({
     appKey: consumerKey,
-    appSecret: consumerSecret
+    appSecret: consumerSecret,
   });
 
   L.i("AuthLib", "Getting user authentication link...");

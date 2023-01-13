@@ -11,7 +11,7 @@ export default class FilterTest extends Command {
         header: "Test Filter (`test-filter`)",
         content: [
           "This command helps you to see and check what Tweets will be filtered.",
-        ]
+        ],
       },
       {
         header: "Parameters",

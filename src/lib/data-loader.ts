@@ -38,7 +38,7 @@ export async function loadSecrets(): Promise<Secrets | null> {
         accessToken: Buffer.from(parsed.user.accessToken, "base64").toString("utf8"),
         accessSecret: Buffer.from(parsed.user.accessSecret, "base64").toString("utf8"),
       },
-    }
+    };
   } else {
     return null;
   }
