@@ -1,6 +1,8 @@
 DEAD PROJECT
 ============
 ![Twitter API is now a paid service](docs/20230202_TwitterAPI.jpg)
+> https://twitter.com/TwitterDev/status/1621026986784337922?t=Lvrm1F29dMGjXHfJbnHU2A&s=19
+
 Now there is no any reason to keep developing this program, as the program is targeted to be an 'free' alternative for paid Tweet cleaner services.
 
 Source code is now archived, and no further changes will be made here.
