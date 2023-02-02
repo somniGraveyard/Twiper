@@ -16,6 +16,7 @@ Twiper
  This is a sequel project of [twitter-pwa-archive-cleaner](https://github.com/SDSkyKlouD/twitter-pwa-archive-cleaner).
 
  This project is in early development, so no detailed instructions have been prepared yet. Use with caution!
+ > Simple usage instruction is available at [the latest release description](https://github.com/somnisomni/Twiper/releases/tag/v0.1.1).
 
 License
 -------
